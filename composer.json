@@ -1,0 +1,17 @@
+{
+    "name": "staffnowa/address-parser",
+    "description": "A PHP library splits a full address into country, city, street, and postcode.",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^8.0",
+        "symfony/intl": "^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": { "StaffNowa\\AddressParser\\": "src/" }
+    }
+}
