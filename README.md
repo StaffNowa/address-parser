@@ -13,7 +13,8 @@ $ composer require StaffNowa/address-parser
 You can use the service as follows:
 
 ```
-$parser = AbstractAddressParser::createParser('Vilkpėdės g. 12, LT-03151 Vilnius, Lithuania');
+$actualAddress = 'Vilkpėdės g. 12, LT-03151 Vilnius, Lithuania';
+$parser = AddressParserFactory::createParser($actualAddress);
 $parsedAddress = $parser->parseAddress($actualAddress);
 
 var_dump([
