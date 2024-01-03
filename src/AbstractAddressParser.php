@@ -2,29 +2,43 @@
 
 namespace StaffNowa\AddressParser;
 
-use StaffNowa\AddressParser\Countries\DefaultAddressParser;
-use StaffNowa\AddressParser\Countries\LithuaniaAddressParser;
-use StaffNowa\AddressParser\Countries\PolandAddressParser;
+use StaffNowa\AddressParser\Exception\PatternMatchingException;
+use StaffNowa\AddressParser\ValueObject\Address;
+use Symfony\Component\Intl\Countries;
 
 abstract class AbstractAddressParser
 {
-    abstract public function parseAddress(string $address);
+    protected const PATTERN = '/(.*), (?:\w{2}-)?(\d{5}) (\w+), (.*)/';
 
-    public static function createParser(string $address): AbstractAddressParser
+    public function parseAddress(string $address): ?Address
     {
-        $detectedCountry = CountryDetector::detectCountry($address);
-        $parserClass = self::getParserClass($detectedCountry);
+        $matches = [];
 
-        return new $parserClass();
+        preg_match(static::PATTERN, $address, $matches);
+        if (count($matches) !== 5) {
+
+            throw new PatternMatchingException($address);
+        }
+
+        $countries = array_flip(Countries::getNames());
+
+        return new Address(
+            $countries[$matches[4]],
+            $matches[3],
+            $this->extractStreet($matches[1]),
+            $matches[2],
+        );
     }
 
-    protected static function getParserClass(?string $country): string
+    private function extractStreet(string $street): string
     {
-        $countryParsers = [
-            'Lithuania' => LithuaniaAddressParser::class,
-            'Poland' => PolandAddressParser::class,
-        ];
+        $pattern = '/^(.*?)(?:-(\d+))?$/u';
+        $matches = [];
 
-        return $countryParsers[$country] ?? DefaultAddressParser::class;
+        if (preg_match($pattern, $street, $matches)) {
+            return $matches[1];
+        }
+
+        return $street;
     }
 }

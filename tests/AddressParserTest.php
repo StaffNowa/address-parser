@@ -4,7 +4,8 @@ namespace StaffNowa\AddressParser\Tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use StaffNowa\AddressParser\AbstractAddressParser;
+use StaffNowa\AddressParser\AddressParserFactory;
+use StaffNowa\AddressParser\Exception\PatternMatchingException;
 use StaffNowa\AddressParser\ValueObject\Address;
 
 class AddressParserTest extends TestCase
@@ -12,15 +13,8 @@ class AddressParserTest extends TestCase
     #[DataProvider('lithuaniaAddressDataProvider')]
     public function testRightLTAddressParse(Address $expectedAddress, string $actualAddress): void
     {
-        $parser = AbstractAddressParser::createParser($actualAddress);
+        $parser = AddressParserFactory::createParser($actualAddress);
         $parsedAddress = $parser->parseAddress($actualAddress);
-
-        var_dump([
-            'country' => $parsedAddress->getCountry(),
-            'city' => $parsedAddress->getCity(),
-            'street' => $parsedAddress->getStreet(),
-            'postocde' => $parsedAddress->getPostcode(),
-        ]);
 
         self::assertEquals($expectedAddress, $parsedAddress);
     }
@@ -28,10 +22,20 @@ class AddressParserTest extends TestCase
     #[DataProvider('polandAddressDataProvider')]
     public function testRightPLAddressParser(Address $expectedAddress, string $actualAddress): void
     {
-        $parser = AbstractAddressParser::createParser($actualAddress);
+        $parser = AddressParserFactory::createParser($actualAddress);
         $parsedAddress = $parser->parseAddress($actualAddress);
 
         self::assertEquals($expectedAddress, $parsedAddress);
+    }
+
+    public function testExceptionIsThrown(): void
+    {
+        $this->expectException(PatternMatchingException::class);
+
+        $address = 'Hello world!';
+
+        $parser = AddressParserFactory::createParser($address);
+        $parser->parseAddress($address);
     }
 
     public static function lithuaniaAddressDataProvider(): array
@@ -52,6 +56,10 @@ class AddressParserTest extends TestCase
             [
                 new Address('LT', 'Vilnius', 'Kauno g. 16', '03212'),
                 'Kauno g. 16-305, LT-03212 Vilnius, Lithuania'
+            ],
+            [
+                new Address('LT', 'Klaipėda', 'Tilžės g. 62', '91108'),
+                'Tilžės g. 62, LT-91108 Klaipėda, Lithuania',
             ],
         ];
     }
