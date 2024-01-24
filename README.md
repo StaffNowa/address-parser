@@ -6,7 +6,7 @@ A PHP library splits a full address into country, city, street, and postcode.
 ## Installation
 This project can be installed via Composer:
 ```shell
-$ composer require StaffNowa/address-parser
+$ composer require staffnowa/address-parser
 ```
 
 ## How to use
