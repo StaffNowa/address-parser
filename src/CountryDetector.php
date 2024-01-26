@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace StaffNowa\AddressParser;
 
 class CountryDetector
@@ -7,7 +9,7 @@ class CountryDetector
     public const LITHUANIA = 'Lithuania';
     public const POLAND = 'Poland';
 
-    public static function detectCountry($address): ?string
+    public static function detectCountry(string $address): ?string
     {
         $countries = [
             self::LITHUANIA => 'Lithuania',

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace StaffNowa\AddressParser;
 
 use StaffNowa\AddressParser\Exception\PatternMatchingException;
@@ -32,13 +34,14 @@ abstract class AbstractAddressParser
 
     private function extractStreet(string $street): string
     {
+        if (empty($street)) {
+            return '';
+        }
+
         $pattern = '/^(.*?)(?:-(\d+))?$/u';
         $matches = [];
 
-        if (preg_match($pattern, $street, $matches)) {
-            return $matches[1];
-        }
-
-        return $street;
+        preg_match($pattern, $street, $matches);
+        return $matches[1];
     }
 }

@@ -39,6 +39,9 @@ class Address
         return $this->postcode;
     }
 
+    /**
+     * @param array<string> $data
+     */
     public static function createFromArray(array $data): self
     {
         return new self(

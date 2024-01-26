@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace StaffNowa\AddressParser;
 
 use StaffNowa\AddressParser\Countries\DefaultAddressParser;
@@ -13,7 +15,10 @@ class AddressParserFactory
         $detectedCountry = CountryDetector::detectCountry($address);
         $parserClass = self::getParserClass($detectedCountry);
 
-        return new $parserClass();
+        /** @var AbstractAddressParser $parser */
+        $parser = new $parserClass();
+
+        return $parser;
     }
 
     protected static function getParserClass(?string $country): string

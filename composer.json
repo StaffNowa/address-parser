@@ -9,9 +9,21 @@
         "symfony/intl": "^7.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "*"
+        "phpunit/phpunit": "*",
+        "phpstan/phpstan": "^1.10"
     },
     "autoload": {
         "psr-4": { "StaffNowa\\AddressParser\\": "src/" }
+    },
+    "scripts": {
+        "test": [
+            "@php vendor/bin/phpunit"
+        ],
+        "phpstan": [
+            "@php vendor/bin/phpstan analyse"
+        ],
+        "coverage-report": [
+            "@php vendor/bin/phpunit --coverage-html reports"
+        ]
     }
 }
